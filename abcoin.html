@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AB Coin Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="top-bar">
+        <button id="task-button">📝 Task</button>
+        <button id="airdrop-button">🎁 Airdrop</button>
+        <button id="boost-button">⚡ Boost</button>
+    </div>
+    <div id="earnings-display" class="earnings-box">Earnings: <span id="earnings-count">0</span> AB Coins/sec</div>
+
+    <div id="game-container">
+        <div id="counter"><span id="coin-count">0</span></div>
+        <img id="ab-coin" src="https://i.postimg.cc/wTGwfxbW/Green-Gradient-Minimalist-Simple-Instagram-Profile-Picture-prev-ui.png" alt="AB Coin">
+    </div>
+
+    <!-- Task Popup -->
+    <div id="task-popup" class="popup">
+        <div class="popup-header">
+            <span>Tasks</span>
+            <button class="close-btn">❌</button>
+        </div>
+        <div class="popup-body">
+            <div class="task-item" data-url="https://youtube.com/@absiddik1">Task 1: Watch video</div>
+            <div class="task-item" data-url="https://youtube.com/@abcreationsx">Task 2: Watch video</div>
+            <div class="task-item" data-url="https://youtube.com/@absiddik4">Task 3: Watch video</div>
+            <div class="task-item" data-url="https://t.me/protacttheabcoin">Task 4: Join Telegram</div>
+            <div class="task-item" data-url="https://t.me/abcoinchat">Task 5: Join Chat</div>
+            <div class="task-item" data-url="https://t.me/+P2HHpv1WVKBhMTNl">Task 6: Join Group</div>
+            <div class="task-item" data-url="https://t.me/ABcoinairdrop">Task 7: Join Airdrop</div>
+        </div>
+    </div>
+
+    <!-- Airdrop Popup -->
+    <div id="airdrop-popup" class="popup">
+        <div class="popup-header">
+            <span>Airdrop</span>
+            <button class="close-btn">❌</button>
+        </div>
+        <div class="popup-body">
+            <div>
+                <label for="age-select">Select your age:</label>
+                <select id="age-select">
+                    <option value="18plus">18+</option>
+                    <option value="under18">Under 18</option>
+                </select>
+            </div>
+            <div id="kyc-upload" style="display:none;">
+                <div id="upload-18plus" style="display:none;">
+                    <h4>Upload KYC Documents</h4>
+                    <label for="front-card">Upload Front Side of Card:</label>
+                    <input type="file" id="front-card"><br>
+                    <label for="back-card">Upload Back Side of Card:</label>
+                    <input type="file" id="back-card"><br>
+                    <label for="selfie">Upload Selfie:</label>
+                    <input type="file" id="selfie"><br>
+                </div>
+                <div id="upload-under18" style="display:none;">
+                    <h4>Provide Your Details</h4>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name"><br>
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob"><br>
+                    <label for="mobile">Mobile:</label>
+                    <input type="text" id="mobile"><br>
+                </div>
+            </div>
+            <p>Airdrop is coming soon!</p>
+            <button id="upload-kyc">Upload KYC</button>
+        </div>
+    </div>
+
+    <!-- Boost Popup -->
+    <div id="boost-popup" class="popup">
+        <div class="popup-header">
+            <span>Boost</span>
+            <button class="close-btn">❌</button>
+        </div>
+        <div class="popup-body">
+            <div class="boost-item" data-cost="50000" data-earn="5">Buy for 50,000 AB Coin - Earn 5/sec</div>
+            <div class="boost-item" data-cost="100000" data-earn="10">Buy for 100,000 AB Coin - Earn 10/sec</div>
+            <div class="boost-item" data-cost="30000" data-earn="3">Buy for 30,000 AB Coin - Earn 3/sec</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
