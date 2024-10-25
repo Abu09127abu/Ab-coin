@@ -4,90 +4,263 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AB Coin Game</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('https://i.postimg.cc/Twxj08k4/images-10.jpg');
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .coin-counter {
+            margin-top: 20px;
+            font-size: 30px;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px red;
+            font-family: 'Ghost', sans-serif;
+            text-shadow: 0 0 5px red;
+        }
+
+        .coin {
+            width: 400px;
+            height: 400px;
+            cursor: pointer;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            user-select: none;
+        }
+
+        .task-popup, .airdrop-popup, .level-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 20px black;
+            font-family: 'Ghost', sans-serif;
+            text-shadow: 0 0 5px red;
+        }
+
+        .task-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Ghost', sans-serif;
+            text-shadow: 0 0 5px red;
+        }
+
+        .task-item.completed {
+            background-color: green;
+            cursor: not-allowed;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .footer button {
+            font-size: 24px;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .plus-one {
+            position: absolute;
+            font-size: 24px;
+            color: yellow;
+            animation: rise 1s ease-out forwards;
+        }
+
+        @keyframes rise {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-50px); }
+        }
+
+        .level-info {
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
-    <div id="top-bar">
-        <button id="task-button">📝 Task</button>
-        <button id="airdrop-button">🎁 Airdrop</button>
-        <button id="boost-button">⚡ Boost</button>
-    </div>
-    <div id="earnings-display" class="earnings-box">Earnings: <span id="earnings-count">0</span> AB Coins/sec</div>
 
-    <div id="game-container">
-        <div id="counter"><span id="coin-count">0</span></div>
-        <img id="ab-coin" src="https://i.postimg.cc/wTGwfxbW/Green-Gradient-Minimalist-Simple-Instagram-Profile-Picture-prev-ui.png" alt="AB Coin">
-    </div>
+    <div class="coin-counter" id="coinCounter">Coins: 0</div>
 
-    <!-- Task Popup -->
-    <div id="task-popup" class="popup">
-        <div class="popup-header">
-            <span>Tasks</span>
-            <button class="close-btn">❌</button>
-        </div>
-        <div class="popup-body">
-            <div class="task-item" data-url="https://youtube.com/@absiddik1">Task 1: Watch video</div>
-            <div class="task-item" data-url="https://youtube.com/@abcreationsx">Task 2: Watch video</div>
-            <div class="task-item" data-url="https://youtube.com/@absiddik4">Task 3: Watch video</div>
-            <div class="task-item" data-url="https://t.me/protacttheabcoin">Task 4: Join Telegram</div>
-            <div class="task-item" data-url="https://t.me/abcoinchat">Task 5: Join Chat</div>
-            <div class="task-item" data-url="https://t.me/+P2HHpv1WVKBhMTNl">Task 6: Join Group</div>
-            <div class="task-item" data-url="https://t.me/ABcoinairdrop">Task 7: Join Airdrop</div>
-        </div>
+    <img src="https://i.postimg.cc/wTGwfxbW/Green-Gradient-Minimalist-Simple-Instagram-Profile-Picture-prev-ui.png" alt="Coin" class="coin" id="coin" ontouchstart="earnCoin(event)">
+
+    <div class="footer">
+        <button onclick="showPopup('task')">📝</button>
+        <button onclick="showPopup('airdrop')">🎁</button>
+        <button onclick="showPopup('level')">📈</button>
     </div>
 
-    <!-- Airdrop Popup -->
-    <div id="airdrop-popup" class="popup">
-        <div class="popup-header">
-            <span>Airdrop</span>
-            <button class="close-btn">❌</button>
-        </div>
-        <div class="popup-body">
-            <div>
-                <label for="age-select">Select your age:</label>
-                <select id="age-select">
-                    <option value="18plus">18+</option>
-                    <option value="under18">Under 18</option>
-                </select>
-            </div>
-            <div id="kyc-upload" style="display:none;">
-                <div id="upload-18plus" style="display:none;">
-                    <h4>Upload KYC Documents</h4>
-                    <label for="front-card">Upload Front Side of Card:</label>
-                    <input type="file" id="front-card"><br>
-                    <label for="back-card">Upload Back Side of Card:</label>
-                    <input type="file" id="back-card"><br>
-                    <label for="selfie">Upload Selfie:</label>
-                    <input type="file" id="selfie"><br>
-                </div>
-                <div id="upload-under18" style="display:none;">
-                    <h4>Provide Your Details</h4>
-                    <label for="name">Name:</label>
-                    <input type="text" id="name"><br>
-                    <label for="dob">Date of Birth:</label>
-                    <input type="date" id="dob"><br>
-                    <label for="mobile">Mobile:</label>
-                    <input type="text" id="mobile"><br>
-                </div>
-            </div>
-            <p>Airdrop is coming soon!</p>
-            <button id="upload-kyc">Upload KYC</button>
-        </div>
+    <div class="task-popup" id="taskPopup">
+        <span class="popup-close" onclick="closePopup('taskPopup')">❌</span>
+        <h2>Tasks</h2>
+        <div class="task-item" onclick="completeTask(1, 'https://t.me/abcoinchat')">Task 1: Join Chat</div>
+        <div class="task-item" onclick="completeTask(2, 'https://t.me/+P2HHpv1WVKBhMTNl')">Task 2: Join Group</div>
+        <div class="task-item" onclick="completeTask(3, 'https://t.me/ABcoinairdrop')">Task 3: Airdrop Group</div>
+        <div class="task-item" onclick="completeTask(4, 'https://t.me/boost/ABcoinairdrop')">Task 4: Boost Airdrop</div>
+        <div class="task-item" onclick="completeTask(5, 'https://www.youtube.com/@ABCointube')">Task 5: AB Coin YouTube</div>
     </div>
 
-    <!-- Boost Popup -->
-    <div id="boost-popup" class="popup">
-        <div class="popup-header">
-            <span>Boost</span>
-            <button class="close-btn">❌</button>
-        </div>
-        <div class="popup-body">
-            <div class="boost-item" data-cost="50000" data-earn="5">Buy for 50,000 AB Coin - Earn 5/sec</div>
-            <div class="boost-item" data-cost="100000" data-earn="10">Buy for 100,000 AB Coin - Earn 10/sec</div>
-            <div class="boost-item" data-cost="30000" data-earn="3">Buy for 30,000 AB Coin - Earn 3/sec</div>
-        </div>
+    <div class="airdrop-popup" id="airdropPopup">
+        <span class="popup-close" onclick="closePopup('airdropPopup')">❌</span>
+        <h2>AB Coin Airdrop</h2>
+        <p>AB Coin airdrop is coming soon, and everyone will get huge profits. Our AB Coin supply is 10,000 billion.</p>
     </div>
 
-    <script src="script.js"></script>
+    <div class="level-popup" id="levelPopup">
+        <span class="popup-close" onclick="closePopup('levelPopup')">❌</span>
+        <h2>Level Info</h2>
+        <div class="level-info">Current Level: <span id="currentLevel">1</span></div>
+        <div class="level-info">Coins Required for Next Level: <span id="coinsRequired">10,000</span></div>
+        <div class="level-info">Click Earnings: <span id="earningsPerClick">1</span></div>
+        <button id="levelUpButton" onclick="levelUp()">Level Up</button>
+    </div>
+
+    <script>
+        let coins = parseInt(localStorage.getItem('coins') || '0');
+        let currentLevel = parseInt(localStorage.getItem('currentLevel') || '1');
+        let coinsPerClick = parseInt(localStorage.getItem('coinsPerClick') || '1');
+        const coinsRequiredForNextLevel = 10000;
+        let coinsPerSecond = 10; // Initial coins earned per second
+        let interval;
+
+        document.getElementById('coinCounter').innerText = `Coins: ${formatCoins(coins)}`;
+        document.getElementById('currentLevel').innerText = currentLevel;
+        document.getElementById('coinsRequired').innerText = coinsRequiredForNextLevel;
+        document.getElementById('earningsPerClick').innerText = coinsPerClick;
+
+        const tasks = JSON.parse(localStorage.getItem('tasks') || '{}');
+
+        document.querySelectorAll('.task-item').forEach((item, index) => {
+            const taskNum = index + 1;
+            if (tasks[taskNum]) item.classList.add('completed');
+        });
+
+        // Start earning coins per second
+        startCoinGeneration();
+
+        function formatCoins(count) {
+            if (count >= 1000000000000) return (count / 1000000000000).toFixed(1) + 'T';
+            if (count >= 1000000000) return (count / 1000000000).toFixed(1) + 'B';
+            if (count >= 1000000) return (count / 1000000).toFixed(1) + 'M';
+            if (count >= 1000) return (count / 1000).toFixed(1) + 'K';
+            return count;
+        }
+
+        function earnCoin(event) {
+            for (let i = 0; i < event.touches.length; i++) {
+                coins += coinsPerClick;
+                localStorage.setItem('coins', coins);
+                document.getElementById('coinCounter').innerText = `Coins: ${formatCoins(coins)}`;
+
+                const plusOne = document.createElement('div');
+                plusOne.className = 'plus-one';
+                plusOne.innerText = `+${coinsPerClick}`;
+                plusOne.style.left = `${event.touches[i].clientX}px`;
+                plusOne.style.top = `${event.touches[i].clientY}px`;
+                document.body.appendChild(plusOne);
+
+                setTimeout(() => plusOne.remove(), 1000);
+            }
+        }
+
+        function showPopup(type) {
+            if (type === 'task') document.getElementById('taskPopup').style.display = 'block';
+            else if (type === 'airdrop') document.getElementById('airdropPopup').style.display = 'block';
+            else if (type === 'level') document.getElementById('levelPopup').style.display = 'block';
+        }
+
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+        }
+
+        function completeTask(taskNum, url) {
+            if (!tasks[taskNum]) {
+                tasks[taskNum] = true;
+                coins += 20000000; // Reward for completing a task
+                localStorage.setItem('coins', coins);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                document.getElementById('coinCounter').innerText = `Coins: ${formatCoins(coins)}`;
+                document.querySelectorAll('.task-item')[taskNum - 1].classList.add('completed');
+                window.open(url, '_blank');
+            }
+        }
+
+        function startCoinGeneration() {
+            interval = setInterval(() => {
+                coins += coinsPerSecond;
+                localStorage.setItem('coins', coins);
+                document.getElementById('coinCounter').innerText = `Coins: ${formatCoins(coins)}`;
+            }, 1000);
+        }
+
+        function levelUp() {
+            if (coins >= coinsRequiredForNextLevel) {
+                coins -= coinsRequiredForNextLevel;
+                currentLevel++;
+                coinsPerClick += 10; // Increase earnings per click by 10
+                coinsPerSecond *= 5; // Increase coins earned per second by 5x
+
+                localStorage.setItem('coins', coins);
+                localStorage.setItem('currentLevel', currentLevel);
+                localStorage.setItem('coinsPerClick', coinsPerClick);
+                document.getElementById('coinCounter').innerText = `Coins: ${formatCoins(coins)}`;
+                document.getElementById('currentLevel').innerText = currentLevel;
+                document.getElementById('coinsRequired').innerText = (coinsRequiredForNextLevel + (currentLevel - 1) * 1000).toString();
+                document.getElementById('earningsPerClick').innerText = coinsPerClick;
+
+                // Show +10 animation
+                const plusTen = document.createElement('div');
+                plusTen.className = 'plus-one';
+                plusTen.innerText = '+10';
+                plusTen.style.left = '50%';
+                plusTen.style.top = '50%';
+                plusTen.style.transform = 'translate(-50%, -50%)';
+                document.body.appendChild(plusTen);
+                setTimeout(() => plusTen.remove(), 1000);
+            }
+        }
+    </script>
 </body>
-</html>
+            </html>
