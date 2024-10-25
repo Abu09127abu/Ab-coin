@@ -162,9 +162,8 @@
         let currentLevel = parseInt(localStorage.getItem('currentLevel') || '1');
         let coinsPerClick = parseInt(localStorage.getItem('coinsPerClick') || '1');
         const coinsRequiredForNextLevel = 10000;
-        let coinsPerSecond = 10; // Initial coins earned per second
-        let interval;
 
+        // Load initial values from local storage
         document.getElementById('coinCounter').innerText = `Coins: ${formatCoins(coins)}`;
         document.getElementById('currentLevel').innerText = currentLevel;
         document.getElementById('coinsRequired').innerText = coinsRequiredForNextLevel;
@@ -177,15 +176,15 @@
             if (tasks[taskNum]) item.classList.add('completed');
         });
 
-        // Start earning coins per second
-        startCoinGeneration();
+        // Start coin earning based on level
+        let coinInterval = setInterval(() => {
+            coins += currentLevel; // Increase coins by current level amount
+            localStorage.setItem('coins', coins);
+            document.getElementById('coinCounter').innerText = `Coins: ${formatCoins(coins)}`;
+        }, 1000); // Increase every second
 
         function formatCoins(count) {
-            if (count >= 1000000000000) return (count / 1000000000000).toFixed(1) + 'T';
-            if (count >= 1000000000) return (count / 1000000000).toFixed(1) + 'B';
-            if (count >= 1000000) return (count / 1000000).toFixed(1) + 'M';
-            if (count >= 1000) return (count / 1000).toFixed(1) + 'K';
-            return count;
+            return count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
 
         function earnCoin(event) {
@@ -211,28 +210,21 @@
             else if (type === 'level') document.getElementById('levelPopup').style.display = 'block';
         }
 
-        function closePopup(popupId) {
-            document.getElementById(popupId).style.display = 'none';
+        function closePopup(id) {
+            document.getElementById(id).style.display = 'none';
         }
 
         function completeTask(taskNum, url) {
             if (!tasks[taskNum]) {
                 tasks[taskNum] = true;
-                coins += 20000000; // Reward for completing a task
-                localStorage.setItem('coins', coins);
                 localStorage.setItem('tasks', JSON.stringify(tasks));
+                coins += 20000000; // Earn 20 million AB Coins
+                localStorage.setItem('coins', coins);
                 document.getElementById('coinCounter').innerText = `Coins: ${formatCoins(coins)}`;
                 document.querySelectorAll('.task-item')[taskNum - 1].classList.add('completed');
+
                 window.open(url, '_blank');
             }
-        }
-
-        function startCoinGeneration() {
-            interval = setInterval(() => {
-                coins += coinsPerSecond;
-                localStorage.setItem('coins', coins);
-                document.getElementById('coinCounter').innerText = `Coins: ${formatCoins(coins)}`;
-            }, 1000);
         }
 
         function levelUp() {
@@ -240,8 +232,6 @@
                 coins -= coinsRequiredForNextLevel;
                 currentLevel++;
                 coinsPerClick += 10; // Increase earnings per click by 10
-                coinsPerSecond *= 5; // Increase coins earned per second by 5x
-
                 localStorage.setItem('coins', coins);
                 localStorage.setItem('currentLevel', currentLevel);
                 localStorage.setItem('coinsPerClick', coinsPerClick);
@@ -263,4 +253,4 @@
         }
     </script>
 </body>
-            </html>
+</html>
